@@ -1,0 +1,23 @@
+{
+  "name": "dannys712-bot",
+  "version": "1.0.0",
+  "description": "Generates https://en.wikipedia.org/wiki/Wikipedia:Database_reports/Polluted_categories",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DannyS712/bot.git"
+  },
+  "author": "MusikAnimal",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/DannyS712/bot/issues"
+  },
+  "homepage": "https://en.wikipedia.org/wiki/User:DannyS712_bot",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "mwbot": "^1.0.10",
+    "mysql": "mysqljs/mysql"
+  }
+}
