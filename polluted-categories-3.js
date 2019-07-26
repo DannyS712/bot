@@ -26,7 +26,7 @@ function log(message) {
  * @returns {Connection} A new MySQL connection.
  */
 function getReplicaConnection() {
-    log('Establishing connection to the replicas');
+    log('Establishing connection to the replicas (PC3)');
     const connection = mysql.createConnection({
         host: credentials.db_host,
         port: credentials.db_port,
@@ -45,7 +45,7 @@ function getReplicaConnection() {
 async function getPollutedCategories() {
     const connection = getReplicaConnection();
 
-    log('Running query to fetch polluted categories');
+    log('Running query to fetch polluted categories (3)');
     const sql = `
         SELECT CONCAT('[[:Category:', cl_to, ']]') AS category, COUNT(*) AS count
         FROM ${database}.categorylinks
