@@ -49,7 +49,7 @@ async function getPollutedCategories() {
     const sql = `
         SELECT CONCAT('[[:Category:', cl_to, ']]') AS category, COUNT(*) AS count
         FROM ${database}.categorylinks
-        WHERE cl_from IN (
+        WHERE cl_to IN (
             SELECT page_title
             FROM page
             LEFT JOIN categorylinks
