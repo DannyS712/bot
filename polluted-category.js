@@ -107,7 +107,6 @@ async function updateReport(content) {
     await bot.edit(reportPage, content, editSummary).catch(err => {
         const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
         log(`Failed to write to page: ${error}`);
-        log(`Full error returned: ${err}`);
     });
 }
 
