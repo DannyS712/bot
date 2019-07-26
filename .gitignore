@@ -1,3 +1,5 @@
 node_modules/
 .idea/
 credentials.json
+package-lock.json
+
