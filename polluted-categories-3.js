@@ -47,7 +47,7 @@ async function getPollutedCategories() {
 
     log('Running query to fetch polluted categories (3)');
     const sql = `
-        SELECT CONCAT('[[:Category:', cl_to, ']]') AS category, COUNT(*) AS count
+        SELECT cl_to AS category, COUNT(*) AS count
         FROM ${database}.categorylinks
         WHERE cl_to IN (
             SELECT page_title
@@ -73,7 +73,7 @@ async function getPollutedCategories() {
 function getTableMarkup(results) {
     let table = '{| class="wikitable sortable" \n! Category !! Pages';
     results.forEach(row => {
-        table += `\n|-\n| ${row.category.toString().replace(/_/g, ' ')} || ${row.count.toString()}`;
+        table += `\n|-\n| [[:Category:${row.category.toString().replace(/_/g, ' ')}]] || ${row.count.toString()}`;
     });
     return table += '\n|}';
 }
