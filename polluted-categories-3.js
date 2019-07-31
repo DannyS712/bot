@@ -58,7 +58,7 @@ async function getPollutedCategories() {
         )
         AND cl_type = 'page'
         GROUP BY cl_to
-        ORDER BY COUNT(*) DESC`;
+        ORDER BY COUNT(*) DESC, cl_to ASC`;
 
     // Make database query synchronous.
     const fn = util.promisify(connection.query).bind(connection);
