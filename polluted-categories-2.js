@@ -67,7 +67,7 @@ async function getPollutedCategories() {
         AND cl_to NOT LIKE '%tracking%'
         AND cl_to NOT LIKE '%nfobox%'
         GROUP BY cl_to
-        ORDER BY COUNT(*) DESC`;
+        ORDER BY COUNT(*) DESC, cl_to ASC`;
 
     // Make database query synchronous.
     const fn = util.promisify(connection.query).bind(connection);
