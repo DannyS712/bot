@@ -10,7 +10,7 @@ const credentials = require('./credentials'); // Load credentials from config.
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
 const reportPage = 'Wikipedia:Database reports/Orphans with incoming links';
-const editSummary = 'Task 55: Update database report - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot 55|BRFA]]';
+const editSummary = 'Task 55: Update database report';
 
 /**
  * Log a message to stdout prepended with a timestamp.
@@ -111,7 +111,7 @@ async function updateReport(content) {
  */
 async function main() {
     const results = await getLinkedOrpahns();
-    const content = 'Pages tagged as orphanes with 2 or more incoming links; ' +
+    const content = 'Pages tagged as orphans with 2 or more incoming links; ' +
         'data as of <onlyinclude>~~~~~</onlyinclude>. Updated by ~~~.\n\n' +
         getTableMarkup(results);
 
