@@ -4,9 +4,9 @@
 
 * `npm install`
 * `cp credentials.json.dist credentials.json` then modify it accordingly.
-* Run `node polluted-categories-2.js`. Pass in `--dry` to print the output
-  to stdout instead of editing the wiki.
-* Run `node polluted-categories-3.js`. Pass in `--dry` to print the output
-  to stdout instead of editing the wiki
-* Run `node orphans-with-links.js`. Pass in `--dry` to print the output
-  to stdout instead of editing the wiki
+* Run `node` followed by one of the tasks set up:
+* * `polluted-categories-2.js` - update polluted categories (2) report
+* * `polluted-categories-3.js` - update polluted categories (3) report
+* * `orphans-with-links.js` - update orphans with links report
+* * `uncategorize-afc.js` - uncategorize afc submissions
+* Pass in `--dry` to print the output to stdout instead of editing the wiki
