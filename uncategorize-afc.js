@@ -105,7 +105,7 @@ async function main() {
       dry = false
     }
     drafts.forEach( row => {
-      await uncategorizePage( bot, ${parseInt(row.draft)}, dry )
+      await uncategorizePage( bot, parseInt(row.draft), dry )
     }
 
     log('Task complete!');
