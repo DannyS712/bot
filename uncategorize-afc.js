@@ -87,7 +87,7 @@ async function botLogin() {
         username: credentials.username,
         password: credentials.password
     });
-    
+
     return bot;
 }
 
@@ -104,8 +104,9 @@ async function main() {
     } else {
       dry = false
     }
-    drafts.forEach( row => {
-      await uncategorizePage( bot, parseInt(row.draft), dry )
+    
+    for ( var iii = 0; iii < drafts.length; iii++ ) {
+      await uncategorizePage( bot, parseInt(drafts[iii].draft), dry )
     }
 
     log('Task complete!');
