@@ -61,7 +61,7 @@ async function getCategorizedDrafts() {
  * @param {MWBot} bot
  * @param {Number} pageID
  * @param {Bool} dryRun
- * @returns {Promise<void>|Void}
+ * @returns {Promise<void>|void}
  */
 async function uncategorizePage( bot, pageID, dryRun ) {
   const content = await bot.readFromID( pageID );
