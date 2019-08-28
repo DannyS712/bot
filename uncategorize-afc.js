@@ -25,7 +25,7 @@ function log(message) {
  * @returns {Connection} A new MySQL connection.
  */
 function getReplicaConnection() {
-    log('Establishing connection to the replicas (PC2)');
+    log('Establishing connection to the replicas (AfC)');
     const connection = mysql.createConnection({
         host: credentials.db_host,
         port: credentials.db_port,
