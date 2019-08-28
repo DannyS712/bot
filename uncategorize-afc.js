@@ -46,7 +46,7 @@ async function getCategorizedDrafts() {
 
     log('Running query to fetch categorized afc submissions');
     const sql = `
-       SELECT page.page_namespace AS ns, page.page_title AS title FROM categorylinks
+       SELECT page.page_id AS ID, page.page_namespace AS ns, page.page_title AS title FROM categorylinks
        JOIN page ON page_id = cl_from
        WHERE cl_to = 'AfC_submissions_with_categories'
        AND page_namespace in (2, 118)`;
@@ -64,12 +64,14 @@ async function getCategorizedDrafts() {
  * @returns {Promise<void>|void}
  */
 async function uncategorizePage( bot, page, dryRun ) {
-  var ns = parseInt( page.ns );
-  var nsTitlePrefix = ( ns === 2 ) ? 'User:' : 'Draft:';
-  var title = nsTitlePrefix + page.title;
+  const ns = parseInt( page.ns );
+  const nsTitlePrefix = ( ns === 2 ) ? 'User:' : 'Draft:';
+  const title = nsTitlePrefix + page.title;
 
+  const pageID = parseInt( page.ID );
   const content = await bot.read( title );
   console.log( content );
+  console.log( content.query.pages[ pageID ].revisions[ 0 ].[ '*' ] );
   const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
   if ( dryRun ) {
     console.log( title, content, newContent );
