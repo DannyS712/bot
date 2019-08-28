@@ -59,16 +59,16 @@ async function getCategorizedDrafts() {
 /**
  * Remove the categories of a page
  * @param {MWBot} bot
- * @param {Object} page
+ * @param {Object} row
  * @param {Bool} dryRun
  * @returns {Promise<void>|void}
  */
-async function uncategorizePage( bot, page, dryRun ) {
-  const ns = parseInt( page.ns );
+async function uncategorizePage( bot, row, dryRun ) {
+  const ns = parseInt( row.ns );
   const nsTitlePrefix = ( ns === 2 ) ? 'User:' : 'Draft:';
-  const title = nsTitlePrefix + page.title;
+  const title = nsTitlePrefix + row.title;
 
-  const pageID = parseInt( page.ID );
+  const pageID = parseInt( row.ID );
   const page = await bot.read( title );
   console.log( page );
   const content = content.query.pages[ pageID ].revisions[ 0 ][ '*' ];
