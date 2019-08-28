@@ -71,7 +71,7 @@ async function uncategorizePage( bot, page, dryRun ) {
   const pageID = parseInt( page.ID );
   const content = await bot.read( title );
   console.log( content );
-  console.log( content.query.pages[ pageID ].revisions[ 0 ].[ '*' ] );
+  console.log( content.query.pages[ pageID ].revisions[ 0 ][ '*' ] );
   const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
   if ( dryRun ) {
     console.log( title, content, newContent );
