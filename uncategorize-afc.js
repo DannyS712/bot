@@ -46,7 +46,7 @@ async function getCategorizedDrafts() {
 
     log('Running query to fetch categorized afc submissions');
     const sql = `
-       SELECT cl_from AS draft FROM categorylinks
+       SELECT page.page_namespace AS ns, page.page_title AS title FROM categorylinks
        JOIN page ON page_id = cl_from
        WHERE cl_to = 'AfC_submissions_with_categories'
        AND page_namespace in (2, 118)`;
@@ -59,18 +59,22 @@ async function getCategorizedDrafts() {
 /**
  * Remove the categories of a page
  * @param {MWBot} bot
- * @param {Number} pageID
+ * @param {Object} page
  * @param {Bool} dryRun
  * @returns {Promise<void>|void}
  */
-async function uncategorizePage( bot, pageID, dryRun ) {
-  const content = await bot.readFromID( pageID );
+async function uncategorizePage( bot, page, dryRun ) {
+  var ns = parseInt( page.ns );
+  var nsTitlePrefix = ( ns === 2 ) ? 'User:' : 'Draft:';
+  var title = nsTitlePrefix + page.title;
+
+  const content = await bot.read( title );
   const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
   if ( dryRun ) {
-    console.log( pageID, content, newContent );
+    console.log( title, content, newContent );
     return;
   } else {
-    return await bot.updateFromID( pageID, newContent, editSummary, { minor: true } );
+    return await bot.update( title, newContent, editSummary, { minor: true } );
   }
 }
 
@@ -106,7 +110,7 @@ async function main() {
     }
     
     for ( var iii = 0; iii < drafts.length; iii++ ) {
-      await uncategorizePage( bot, parseInt(drafts[iii].draft), dry )
+      await uncategorizePage( bot, drafts[iii], dry )
     }
 
     log('Task complete!');
