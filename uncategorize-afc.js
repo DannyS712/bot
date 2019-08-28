@@ -69,6 +69,7 @@ async function uncategorizePage( bot, page, dryRun ) {
   var title = nsTitlePrefix + page.title;
 
   const content = await bot.read( title );
+  console.log( content );
   const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
   if ( dryRun ) {
     console.log( title, content, newContent );
