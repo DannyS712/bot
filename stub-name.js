@@ -38,7 +38,7 @@ function getReplicaConnection() {
 }
 
 /**
- * Query the replicas to get the categorized drafts.
+ * Query the replicas to get the error stub template.
  * @returns {Array} Result of query.
  */
 async function getErrorStubs() {
