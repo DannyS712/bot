@@ -56,6 +56,7 @@ async function getPollutedCategories() {
             ON page.page_id = categorylinks.cl_from
             WHERE cl_to = 'Disambiguation_categories'
         )
+        AND cl_type = 'page'
         GROUP BY cl_to
         ORDER BY COUNT(*) DESC, cl_to ASC`;
 
