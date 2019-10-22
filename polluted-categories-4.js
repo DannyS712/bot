@@ -10,7 +10,7 @@ const credentials = require('./credentials'); // Load credentials from config.
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
 const reportPage = 'Wikipedia:Database reports/Polluted categories (4)';
-const editSummary = 'Update database report - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot 59|BRFA]]';
+const editSummary = 'Task 59: Update database report';
 
 /**
  * Log a message to stdout prepended with a timestamp.
