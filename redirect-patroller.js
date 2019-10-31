@@ -60,7 +60,7 @@ async function getRecentRedirects() {
           AND ptrpt_tag_id = 9
           AND page_namespace = 0
           AND page_is_redirect = 1
-          AND ptrp_created > (DATE_FORMAT((NOW() - INTERVAL 2 DAY), '%Y%m%d%H%i%S'))`;
+          AND ptrp_created > (DATE_FORMAT((NOW() - INTERVAL 1 HOUR), '%Y%m%d%H%i%S'))`;
 
     // Make database query synchronous.
     const fn = util.promisify(connection.query).bind(connection);
