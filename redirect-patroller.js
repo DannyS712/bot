@@ -6,7 +6,7 @@ const MWBot = require('mwbot');
 const mysql = require('mysql');
 const util = require('util');
 
-const credentials = require('./redirect credentials'); // Load credentials from config.
+const credentials = require('./redirect_credentials'); // Load credentials from config.
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
 const reportPage = 'User:DannyS712 bot III/Redirects.json';
