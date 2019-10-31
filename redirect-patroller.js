@@ -148,7 +148,7 @@ function comparePages( target, title ) {
 async function main() {
     const results = await getRecentRedirects();
     const patrollable = getPatrollableRedirects( results );
-    const patrollableAsJSON = JSON.stringify( data, null, 2 );
+    const patrollableAsJSON = JSON.stringify( patrollable, null, 2 );
 
     if (argv.dry) {
         // Dry mode.
