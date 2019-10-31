@@ -1,4 +1,5 @@
 node_modules/
 .idea/
 credentials.json
+redirect_credentials.json
 package-lock.json
