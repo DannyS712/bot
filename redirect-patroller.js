@@ -202,7 +202,7 @@ async function main() {
         console.log(patrollableAsJSON);
     } else {
         await updateReport(patrollableAsJSON);
-        await patrolRedirects(patrollableASJSON);
+        await patrolRedirects(patrollableAsJSON);
     }
 
     log('Task complete!');
