@@ -111,8 +111,8 @@ function getPatrollableRedirects( redirects ) {
  * @returns {bool} if the redirect should be patrolled
  */
 function shouldPatrol( redirect ) {
-    var target = redirect.target.replace( /REDIRECT /i, '');
-    var title = redirect.title;
+    var target = redirect.target.toString().replace( /REDIRECT /i, '');
+    var title = redirect.title.toString();
     ///*
     if (target === title.replace( / \(disambiguation\)/i, '')) return true;
     if (comparePages( target, title )) return true;
