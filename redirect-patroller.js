@@ -96,10 +96,17 @@ async function updateReport(content) {
  * @returns {Array} redirects that can be patrolled
  */
 function getPatrollableRedirects( redirects ) {
-    var patrollable = []
+    var patrollable = [];
+    var title, target;
     for ( var iii = 0; iii < redirects.length; iii++ ) {
-        if ( shouldPatrol( redirects[iii] ) ) {
-            patrollable.push( redirects[iii] );
+        title = redirects[iii].title.toString().replace( /_/g, ' ');
+        target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
+        if ( shouldPatrol( title, target ) ) {
+            patrollable.push( {
+                pageid: parseInt( redirects[iii].pageid ),
+                title: title,
+                target: target,
+            } );
         }
     }
     return patrollable;
@@ -107,13 +114,11 @@ function getPatrollableRedirects( redirects ) {
 
 /**
  * Determine if a specific redirect should be patrolled
- * @param {Object} redirect information
+ * @param {String} title redirect title
+ * @param (String} target redirect target
  * @returns {bool} if the redirect should be patrolled
  */
-function shouldPatrol( redirect ) {
-    var target = redirect.target.toString().replace( /REDIRECT /i, '');
-    var title = redirect.title.toString();
-    ///*
+function shouldPatrol( title, target ) {
     if (target === title.replace( / \(disambiguation\)/i, '')) return true;
     if (comparePages( target, title )) return true;
     if (comparePages( target + 's', title ) ) return true;
@@ -125,7 +130,6 @@ function shouldPatrol( redirect ) {
     if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return true;
     if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return true;
     if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return true;
-    //*/
     return false;
 }
 
@@ -147,7 +151,9 @@ function comparePages( target, title ) {
  */
 async function main() {
     const results = await getRecentRedirects();
+    console.log( results );
     const patrollable = getPatrollableRedirects( results );
+    console.log( patrollable );
     const patrollableAsJSON = JSON.stringify( patrollable, null, 2 );
 
     if (argv.dry) {
