@@ -60,7 +60,7 @@ async function getRecentRedirects() {
           AND ptrpt_tag_id = 9
           AND page_namespace = 0
           AND page_is_redirect = 1
-          AND ptrp_created > (DATE_FORMAT((NOW() - INTERVAL 1 DAY), '%Y%m%d%H%i%S'))`;
+          AND ptrp_created > (DATE_FORMAT((NOW() - INTERVAL 2 DAY), '%Y%m%d%H%i%S'))`;
 
     // Make database query synchronous.
     const fn = util.promisify(connection.query).bind(connection);
@@ -68,11 +68,10 @@ async function getRecentRedirects() {
 }
 
 /**
- * Update the report with the given content.
- * @param {String} content
- * @returns {Promise<void>}
+ * Retrieve bot instance
+ * @returns MWBot
  */
-async function updateReport(content) {
+async function getBot() {
     // Login to the bot.
     log(`Logging in to bot account`);
     const bot = new MWBot({apiUrl});
@@ -81,7 +80,17 @@ async function updateReport(content) {
         username: credentials.username,
         password: credentials.password
     });
+    return bot;
+}
 
+
+/**
+ * Update the report with the given content.
+ * @param {String} content
+ * @param {MWBot} bot
+ * @returns {Promise<void>}
+ */
+async function updateReport(content, bot) {
     // Edit the page.
     log(`Writing to [[${reportPage}]]`);
     await bot.edit(reportPage, content, editSummary).catch(err => {
@@ -94,17 +103,10 @@ async function updateReport(content) {
 /**
  * Patrol the redirects
  * @param {int} pageid
+ * @param {MWBot} bot
  * @returns {Promise<void>}
  */
-async function patrolRedirect( pageid ) {
-    // Login to the bot.
-    const bot = new MWBot({apiUrl});
-    await bot.loginGetEditToken({
-        apiUrl,
-        username: credentials.username,
-        password: credentials.password
-    });
-
+async function patrolRedirect( pageid, bot ) {
     // Patrol the redirect.
     log(`Patrolling ${pageid}`);
     await bot.request( {
@@ -116,19 +118,21 @@ async function patrolRedirect( pageid ) {
 	console.log( response );
     } ).catch(err => {
         const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
-        log(`Failed to patrol to page: ${error}`);
+        log(`Failed to patrol page: ${error}`);
     });
 }
 
 /**
  * Patrol the redirects
  * @param {Array} redirects to patrol
+ * @param {MWBot} bot
  * @returns {bool} true
  */
-async function patrolRedirects( redirects ) {
-    for (var lll = 0; lll < redirects.length; lll++){
-		patrolRedirect( redirects[lll].pageid);
-	}
+async function patrolRedirects( redirects, bot ) {
+    console.log( redirects );
+    for (var lll = 0; lll < redirects.length; lll++) {
+	await patrolRedirect( redirects[lll].pageid, bot );
+    }
     return true;
 }
 
@@ -137,7 +141,7 @@ async function patrolRedirects( redirects ) {
  * @param {Array} redirects all redirects
  * @returns {Array} redirects that can be patrolled
  */
-function getPatrollableRedirects( redirects ) {
+async function getPatrollableRedirects( redirects ) {
     var patrollable = [];
     var title, target;
     for ( var iii = 0; iii < redirects.length; iii++ ) {
@@ -193,17 +197,20 @@ function comparePages( target, title ) {
  */
 async function main() {
     const results = await getRecentRedirects();
-    console.log( results );
-    const patrollable = getPatrollableRedirects( results );
-    console.log( patrollable );
-    const patrollableAsJSON = JSON.stringify( patrollable, null, 2 );
+    //console.log( results );
+    const patrollable = await getPatrollableRedirects( results );
+    console.log( 'patrollable', patrollable );
+    const patrollableAsString = await JSON.stringify( patrollable );
+    console.log( 'as string:', patrollableAsString );
+
+    const bot = await getBot();
+    await updateReport( patrollableAsString, bot );
 
     if (argv.dry) {
         // Dry mode.
-        console.log(patrollableAsJSON);
+        console.log(patrollableAsString);
     } else {
-        await updateReport(patrollableAsJSON);
-        await patrolRedirects(patrollableAsJSON);
+        await patrolRedirects(patrollable, bot);
     }
 
     log('Task complete!');
