@@ -90,6 +90,47 @@ async function updateReport(content) {
     });
 }
 
+
+/**
+ * Patrol the redirects
+ * @param {int} pageid
+ * @returns {Promise<void>}
+ */
+async function patrolRedirect( pageid ) {
+    // Login to the bot.
+    log(`Logging in to bot account`);
+    const bot = new MWBot({apiUrl});
+    await bot.loginGetEditToken({
+        apiUrl,
+        username: credentials.username,
+        password: credentials.password
+    });
+
+    // Patrol the redirect.
+    log(`Patrolling ${pageid}`);
+    await bot.request( {
+        action: 'pagetriageaction',
+        pageid: pageid,
+        reviewed: 1,
+        token: bot.editToken
+    } ).catch(err => {
+        const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+        log(`Failed to patrol to page: ${error}`);
+    });
+}
+
+/**
+ * Patrol the redirects
+ * @param {Array} redirects to patrol
+ * @returns {bool} true
+ */
+async function patrolRedirects( redirects ) {
+    for (var lll = 0; lll < redirects.length; lll++){
+		patrolRedirect( redirects[lll].pageid);
+	}
+    return true;
+}
+
 /**
  * Filter redirects to only include those that can be patrolled
  * @param {Array} redirects all redirects
@@ -161,6 +202,7 @@ async function main() {
         console.log(patrollableAsJSON);
     } else {
         await updateReport(patrollableAsJSON);
+        await patrolRedirects(patrollableASJSON);
     }
 
     log('Task complete!');
