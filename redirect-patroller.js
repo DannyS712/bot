@@ -98,7 +98,6 @@ async function updateReport(content) {
  */
 async function patrolRedirect( pageid ) {
     // Login to the bot.
-    log(`Logging in to bot account`);
     const bot = new MWBot({apiUrl});
     await bot.loginGetEditToken({
         apiUrl,
@@ -113,6 +112,8 @@ async function patrolRedirect( pageid ) {
         pageid: pageid,
         reviewed: 1,
         token: bot.editToken
+    } ).then( response => {
+	console.log( response );
     } ).catch(err => {
         const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
         log(`Failed to patrol to page: ${error}`);
