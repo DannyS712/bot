@@ -109,6 +109,7 @@ function getPatrollableRedirects( redirects ) {
  * Determine if a specific redirect should be patrolled
  * @param {Object} redirect information
  * @returns {bool} if the redirect should be patrolled
+ */
 function shouldPatrol( redirect ) {
     var target = redirect.target.replace( /REDIRECT /i, '');
     var title = redirect.title;
