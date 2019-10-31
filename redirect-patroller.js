@@ -133,7 +133,7 @@ function shouldPatrol( redirect ) {
  * @param {String} target
  * @param {String} title
  * @returns {bool} if the redirect should be patrolled
- * /
+ */
 function comparePages( target, title ) {
     var comparison = target.localeCompare( title, 'en', {sensitivity: 'base'} );
     if (comparison === 0) return true;
