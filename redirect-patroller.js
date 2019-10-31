@@ -98,7 +98,7 @@ async function updateReport(content) {
 function getPatrollableRedirects( redirects ) {
     var patrollable = []
     for ( var iii = 0; iii < redirects.length; iii++ ) {
-        if ( shouldPatrol( redirects[iii] ) {
+        if ( shouldPatrol( redirects[iii] ) ) {
             patrollable.push( redirects[iii] );
         }
     }
