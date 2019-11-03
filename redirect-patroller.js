@@ -17,8 +17,8 @@ const editSummary = 'Redirects to patrol (bot)';
  * @param {String} message
  */
 function log(message) {
-    const datestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    console.log(`${datestamp}: ${message}`);
+	const datestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	console.log(`${datestamp}: ${message}`);
 }
 
 /**
@@ -26,16 +26,16 @@ function log(message) {
  * @returns {Connection} A new MySQL connection.
  */
 function getReplicaConnection() {
-    log('Establishing connection to the replicas (redirect patroller)');
-    const connection = mysql.createConnection({
-        host: credentials.db_host,
-        port: credentials.db_port,
-        user: credentials.db_user,
-        password: credentials.db_password,
-        database: credentials.db_database
-    });
-    connection.connect();
-    return connection;
+	log('Establishing connection to the replicas (redirect patroller)');
+	const connection = mysql.createConnection({
+		host: credentials.db_host,
+		port: credentials.db_port,
+		user: credentials.db_user,
+		password: credentials.db_password,
+		database: credentials.db_database
+	});
+	connection.connect();
+	return connection;
 }
 
 /**
@@ -43,28 +43,27 @@ function getReplicaConnection() {
  * @returns {Array} Result of query.
  */
 async function getRecentRedirects() {
-    const connection = getReplicaConnection();
+	const connection = getReplicaConnection();
 
-    log('Running query to fetch unpatrolled redirects');
-    const sql = `
-        SELECT
-          page_id AS 'pageid',
-          page_title AS 'title',
-          ptrpt_value AS 'target'
-        FROM
-          ${database}.page
-          JOIN ${database}.pagetriage_page ON page_id = ptrp_page_id
-          JOIN ${database}.pagetriage_page_tags ON ptrp_page_id = ptrpt_page_id
-        WHERE
-          ptrp_reviewed = 0
-          AND ptrpt_tag_id = 9
-          AND page_namespace = 0
-          AND page_is_redirect = 1
-          AND ptrp_created > (DATE_FORMAT((NOW() - INTERVAL 1 HOUR), '%Y%m%d%H%i%S'))`;
+	log('Running query to fetch unpatrolled redirects');
+	const sql = `
+		SELECT
+			page_id AS 'pageid',
+			page_title AS 'title',
+			ptrpt_value AS 'target'
+		FROM
+			${database}.page
+			JOIN ${database}.pagetriage_page ON page_id = ptrp_page_id
+			JOIN ${database}.pagetriage_page_tags ON ptrp_page_id = ptrpt_page_id
+		WHERE
+			ptrp_reviewed = 0
+			AND ptrpt_tag_id = 9
+			AND page_namespace = 0
+			AND page_is_redirect = 1`;
 
-    // Make database query synchronous.
-    const fn = util.promisify(connection.query).bind(connection);
-    return await fn(sql);
+	// Make database query synchronous.
+	const fn = util.promisify(connection.query).bind(connection);
+	return await fn(sql);
 }
 
 /**
@@ -72,15 +71,15 @@ async function getRecentRedirects() {
  * @returns MWBot
  */
 async function getBot() {
-    // Login to the bot.
-    log(`Logging in to bot account`);
-    const bot = new MWBot({apiUrl});
-    await bot.loginGetEditToken({
-        apiUrl,
-        username: credentials.username,
-        password: credentials.password
-    });
-    return bot;
+	// Login to the bot.
+	log(`Logging in to bot account`);
+	const bot = new MWBot({apiUrl});
+	await bot.loginGetEditToken({
+		apiUrl,
+		username: credentials.username,
+		password: credentials.password
+	});
+	return bot;
 }
 
 
@@ -91,12 +90,12 @@ async function getBot() {
  * @returns {Promise<void>}
  */
 async function updateReport(content, bot) {
-    // Edit the page.
-    log(`Writing to [[${reportPage}]]`);
-    await bot.edit(reportPage, content, editSummary).catch(err => {
-        const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
-        log(`Failed to write to page: ${error}`);
-    });
+	// Edit the page.
+	log(`Writing to [[${reportPage}]]`);
+	await bot.edit(reportPage, content, editSummary).catch(err => {
+		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+		log(`Failed to write to page: ${error}`);
+	});
 }
 
 
@@ -107,19 +106,19 @@ async function updateReport(content, bot) {
  * @returns {Promise<void>}
  */
 async function patrolRedirect( pageid, bot ) {
-    // Patrol the redirect.
-    log(`Patrolling ${pageid}`);
-    await bot.request( {
-        action: 'pagetriageaction',
-        pageid: pageid,
-        reviewed: 1,
-        token: bot.editToken
-    } ).then( response => {
+	// Patrol the redirect.
+	log(`Patrolling ${pageid}`);
+	await bot.request( {
+		action: 'pagetriageaction',
+		pageid: pageid,
+		reviewed: 1,
+		token: bot.editToken
+	} ).then( response => {
 	console.log( response );
-    } ).catch(err => {
-        const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
-        log(`Failed to patrol page: ${error}`);
-    });
+	} ).catch(err => {
+		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+		log(`Failed to patrol page: ${error}`);
+	});
 }
 
 /**
@@ -129,33 +128,39 @@ async function patrolRedirect( pageid, bot ) {
  * @returns {bool} true
  */
 async function patrolRedirects( redirects, bot ) {
-    console.log( redirects );
-    for (var lll = 0; lll < redirects.length; lll++) {
-	await patrolRedirect( redirects[lll].pageid, bot );
-    }
-    return true;
+	console.log( redirects );
+	for (var lll = 0; lll < redirects.length; lll++) {
+		await patrolRedirect( redirects[lll].pageid, bot );
+	}
+	return true;
 }
 
 /**
  * Filter redirects to only include those that can be patrolled
  * @param {Array} redirects all redirects
+ * @param {bool} logAll whether everything should be logged
  * @returns {Array} redirects that can be patrolled
  */
-async function getPatrollableRedirects( redirects ) {
-    var patrollable = [];
-    var title, target;
-    for ( var iii = 0; iii < redirects.length; iii++ ) {
-        title = redirects[iii].title.toString().replace( /_/g, ' ');
-        target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
-        if ( shouldPatrol( title, target ) ) {
-            patrollable.push( {
-                pageid: parseInt( redirects[iii].pageid ),
-                title: title,
-                target: target,
-            } );
-        }
-    }
-    return patrollable;
+async function getPatrollableRedirects( redirects, logAll ) {
+	var patrollable = [];
+	var title, target;
+	for ( var iii = 0; iii < redirects.length; iii++ ) {
+		title = redirects[iii].title.toString().replace( /_/g, ' ');
+		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
+		if ( shouldPatrol( title, target ) ) {
+			patrollable.push( {
+				pageid: parseInt( redirects[iii].pageid ),
+				title: title,
+				target: target,
+			} );
+			if ( logAll ) {
+				log( title, ' -> ', target, ' - true' );
+			}
+		} else if ( logAll ) {
+			log( title, ' -> ', target, ' - false' );
+		}
+	}
+	return patrollable;
 }
 
 /**
@@ -165,18 +170,18 @@ async function getPatrollableRedirects( redirects ) {
  * @returns {bool} if the redirect should be patrolled
  */
 function shouldPatrol( title, target ) {
-    if (target === title.replace( / \(disambiguation\)/i, '')) return true;
-    if (comparePages( target, title )) return true;
-    if (comparePages( target + 's', title ) ) return true;
-    if (comparePages( target + 'es', title ) ) return true;
-    if (comparePages( target.replace( /[’'‘]/g, '\'' ), title.replace( /[’'‘]/g, '\'' ) ) ) return true;
-    if (comparePages( target, title.replace( /(\w*), (\w*)/, '$2 $1' ) ) ) return true;
-    if (comparePages( target, 'List of ' + title ) ) return true;
-    if (comparePages( target.replace( /[ -]/g, '' ), title.replace( /[ -]/g, '' ) ) ) return true;
-    if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return true;
-    if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return true;
-    if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return true;
-    return false;
+	if (target === title.replace( / \(disambiguation\)/i, '')) return true;
+	if (comparePages( target, title )) return true;
+	if (comparePages( target + 's', title ) ) return true;
+	if (comparePages( target + 'es', title ) ) return true;
+	if (comparePages( target.replace( /[’'‘]/g, '\'' ), title.replace( /[’'‘]/g, '\'' ) ) ) return true;
+	if (comparePages( target, title.replace( /(\w*), (\w*)/, '$2 $1' ) ) ) return true;
+	if (comparePages( target, 'List of ' + title ) ) return true;
+	if (comparePages( target.replace( /[ -]/g, '' ), title.replace( /[ -]/g, '' ) ) ) return true;
+	if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return true;
+	if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return true;
+	if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return true;
+	return false;
 }
 
 /**
@@ -186,9 +191,9 @@ function shouldPatrol( title, target ) {
  * @returns {bool} if the redirect should be patrolled
  */
 function comparePages( target, title ) {
-    var comparison = target.localeCompare( title, 'en', {sensitivity: 'base'} );
-    if (comparison === 0) return true;
-    return false;
+	var comparison = target.localeCompare( title, 'en', {sensitivity: 'base'} );
+	if (comparison === 0) return true;
+	return false;
 }
 
 /**
@@ -196,25 +201,25 @@ function comparePages( target, title ) {
  * @returns {Promise<void>}
  */
 async function main() {
-    const results = await getRecentRedirects();
-    //console.log( results );
-    const patrollable = await getPatrollableRedirects( results );
-    console.log( 'patrollable', patrollable );
-    const patrollableAsString = await JSON.stringify( patrollable );
-    console.log( 'as string:', patrollableAsString );
+	const results = await getRecentRedirects();
+	//console.log( results );
+	const patrollable = await getPatrollableRedirects( results, argv.log );
+	console.log( 'patrollable', patrollable );
+	const patrollableAsString = await JSON.stringify( patrollable );
+	console.log( 'as string:', patrollableAsString );
 
-    const bot = await getBot();
-    await updateReport( patrollableAsString, bot );
+	const bot = await getBot();
+	await updateReport( patrollableAsString, bot );
 
-    if (argv.dry) {
-        // Dry mode.
-        console.log(patrollableAsString);
-    } else {
-        await patrolRedirects(patrollable, bot);
-    }
+	if (argv.dry) {
+		// Dry mode.
+		console.log(patrollableAsString);
+	} else {
+		await patrolRedirects(patrollable, bot);
+	}
 
-    log('Task complete!');
-    process.exit();
+	log('Task complete!');
+	process.exit();
 }
 
 main().catch(console.error);
