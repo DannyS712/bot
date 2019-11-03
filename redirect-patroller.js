@@ -154,10 +154,10 @@ async function getPatrollableRedirects( redirects, logAll ) {
 				target: target,
 			} );
 			if ( logAll ) {
-				log( title, ' -> ', target, ' - true' );
+				log( title + ' -> ' + target + ' - true' );
 			}
 		} else if ( logAll ) {
-			log( title, ' -> ', target, ' - false' );
+			log( title + ' -> ' + target + ' - false' );
 		}
 	}
 	return patrollable;
