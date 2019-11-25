@@ -174,7 +174,7 @@ function shouldPatrol( title, target ) {
 	if (comparePages( target, title )) return true;
 	if (comparePages( target + 's', title ) ) return true;
 	if (comparePages( target + 'es', title ) ) return true;
-	if (comparePages( target.replace( /[’'‘]/g, '\'' ), title.replace( /[’'‘]/g, '\'' ) ) ) return true;
+	if (comparePages( target.replace( /[’'‘ʻ]/g, '\'' ), title.replace( /[’'‘ʻ]/g, '\'' ) ) ) return true;
 	if (comparePages( target, title.replace( /(\w*), (\w*)/, '$2 $1' ) ) ) return true;
 	if (comparePages( target, 'List of ' + title ) ) return true;
 	if (comparePages( target.replace( /[ -]/g, '' ), title.replace( /[ -]/g, '' ) ) ) return true;
