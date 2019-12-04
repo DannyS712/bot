@@ -50,7 +50,7 @@ async function acceptNoChange( revid, bot ) {
 		comment: acceptSummary,
 		token: bot.editToken
 	} ).then( response => {
-	  console.log( response );
+		console.log( response );
 	} ).catch(err => {
 		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
 		log(`Failed to accept edits: ${error}`);
@@ -64,23 +64,58 @@ async function acceptNoChange( revid, bot ) {
  */
 function getPending( bot ) {
 	log(`Querying pending changes via api`);
-  return new Promise((resolve) => {
-	  bot.request( {
-		  action: 'query',
-      list: 'oldreviewedpages',
-      ormaxsize: 0,
-      ornamespace: '*',
-      orlimit: 'max',
-      formatversion: 2,
-	  } ).then( response => {
-      console.log( response );
-      resolve( response );
-	  } ).catch(err => {
-		  const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
-		  log(`Failed to accept edits: ${error}`);
-      resolve( false )
-	  });
-  });
+	return new Promise((resolve) => {
+		bot.request( {
+			action: 'query',
+			list: 'oldreviewedpages',
+			ormaxsize: 0,
+			ornamespace: '*',
+			orlimit: 'max',
+			formatversion: 2,
+	 	 } ).then( response => {
+			console.log( response );
+			resolve( response );
+		  } ).catch(err => {
+			const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+			log(`Failed to get pending changes: ${error}`);
+			resolve( false )
+		});
+	});
+}
+
+/**
+ * Check pending changes to a page
+ * @param {MWBot} bot
+ * @param {int} oldid
+ * @param {int} newid
+ */
+async function checkPage( bot, oldid, newid ) {
+	const old_content = await getPage( bot, oldid );
+	const new_content = await getPage( bot, newid );
+	console.log( old_content, new_content, old_content == new_content );
+}
+
+/**
+ * Get the wikitext of a page
+ * @param {MWBot} bot
+ * @param {int} revid
+ * @returns {Promise<String|false>}
+ */
+function getPage( bot, revid ) {
+	return new Promise((resolve) => {
+		bot.request( {
+			action: 'parse',
+			oldid: revid,
+			prop: 'wikitext'
+	 	 } ).then( response => {
+			console.log( response );
+			resolve( response.parse.wikitext['*'] );
+		  } ).catch(err => {
+			const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+			log(`Failed to accept edits: ${error}`);
+			resolve( false )
+		});
+	});
 }
 
 /**
@@ -95,6 +130,7 @@ async function main() {
 	console.log( 'pending', pending );
 	for ( var iii = 0; iii < pending.length; iii++ ) {
 		console.log( pending[iii].stable_revid, pending[iii].revid );
+		await checkPage( bot, pending[iii].stable_revid, pending[iii].revid );
 	}
 /*
 	if (argv.dry) {
