@@ -116,7 +116,7 @@ function getPage( bot, revid ) {
 			oldid: revid,
 			prop: 'wikitext'
 	 	 } ).then( response => {
-			console.log( response );
+			//console.log( response );
 			resolve( response.parse.wikitext['*'] );
 		  } ).catch(err => {
 			const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
