@@ -91,6 +91,11 @@ async function main() {
 	const bot = await getBot();
 	const allPending = await getPending( bot );
 	console.log( 'allPending', allPending );
+	const pending = allPending.query.oldreviewedpages;
+	console.log( 'pending', pending );
+	for ( var iii = 0; iii < pending.length; iii++ ) {
+		console.log( pending[iii].stable_revid, pending[iii].revid );
+	}
 /*
 	if (argv.dry) {
 		// Dry mode.
