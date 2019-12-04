@@ -88,11 +88,19 @@ function getPending( bot ) {
  * @param {MWBot} bot
  * @param {int} oldid
  * @param {int} newid
+ * @param {bool} dry
  */
-async function checkPage( bot, oldid, newid ) {
+async function checkPage( bot, oldid, newid, dry ) {
 	const old_content = await getPage( bot, oldid );
 	const new_content = await getPage( bot, newid );
-	console.log( old_content, new_content, old_content == new_content );
+	if ( old_content === new_content ) {
+		log( `No net change between ${oldid} and ${newid}` );
+		if ( dry ) {
+			console.log( `Would accept ${newid}` );
+		} else {
+			await acceptNoChange( newid, bot );
+		}
+	}
 }
 
 /**
@@ -130,16 +138,8 @@ async function main() {
 	console.log( 'pending', pending );
 	for ( var iii = 0; iii < pending.length; iii++ ) {
 		console.log( pending[iii].stable_revid, pending[iii].revid );
-		await checkPage( bot, pending[iii].stable_revid, pending[iii].revid );
+		await checkPage( bot, pending[iii].stable_revid, pending[iii].revid, argv.dry );
 	}
-/*
-	if (argv.dry) {
-		// Dry mode.
-		console.log(patrollableAsString);
-	} else {
-		await patrolRedirects(patrollable, bot);
-	}
-*/
 	log('Task complete!');
 	process.exit();
 }
