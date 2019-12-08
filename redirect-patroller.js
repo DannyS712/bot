@@ -146,10 +146,11 @@ async function patrolRedirects( redirects, bot ) {
  */
 async function getPatrollableRedirects( redirects, logAll ) {
 	var patrollable = [];
-	var title, target;
+	var title, target, user;
 	for ( var iii = 0; iii < redirects.length; iii++ ) {
 		title = redirects[iii].title.toString().replace( /_/g, ' ');
 		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
+		user = redirects[iii].creator.toString();
 		if ( shouldPatrol( title, target ) ) {
 			patrollable.push( {
 				pageid: parseInt( redirects[iii].pageid ),
@@ -157,10 +158,10 @@ async function getPatrollableRedirects( redirects, logAll ) {
 				target: target,
 			} );
 			if ( logAll ) {
-				log( title + ' -> ' + target + ' - true' );
+				log( title + ' -> ' + target + ' created by ' + user + ' - true' );
 			}
 		} else if ( logAll ) {
-			log( title + ' -> ' + target + ' - false' );
+			log( title + ' -> ' + target + ' created by ' + user + ' - false' );
 		}
 	}
 	return patrollable;
