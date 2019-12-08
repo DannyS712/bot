@@ -151,7 +151,7 @@ async function getPatrollableRedirects( redirects, logAll ) {
 		title = redirects[iii].title.toString().replace( /_/g, ' ');
 		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
 		user = redirects[iii].creator.toString();
-		if ( shouldPatrol( title, target ) ) {
+		if ( shouldPatrol( title, target, user ) ) {
 			patrollable.push( {
 				pageid: parseInt( redirects[iii].pageid ),
 				title: title,
@@ -174,7 +174,8 @@ async function getPatrollableRedirects( redirects, logAll ) {
  * @param (String} target redirect target
  * @returns {bool} if the redirect should be patrolled
  */
-function shouldPatrol( title, target ) {
+function shouldPatrol( title, target, user ) {
+	if (checkAutopatrol( user ) ) return true;
 	if (target === title.replace( / \(disambiguation\)/i, '')) return true;
 	if (comparePages( target, title )) return true;
 	if (comparePages( target + 's', title ) ) return true;
@@ -186,6 +187,15 @@ function shouldPatrol( title, target ) {
 	if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return true;
 	if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return true;
 	if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return true;
+	return false;
+}
+
+/**
+ * Determine if a redirect was created by an "autopatrolled" user
+ * @param {String} user redirect creator
+ * @returns {bool} if the redirect should be patrolled based on creator
+ */
+function checkAutopatrol( user ) {
 	return false;
 }
 
