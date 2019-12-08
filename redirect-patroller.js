@@ -50,11 +50,14 @@ async function getRecentRedirects() {
 		SELECT
 			page_id AS 'pageid',
 			page_title AS 'title',
-			ptrpt_value AS 'target'
+			ptrpt_value AS 'target',
+			actor_name AS 'creator'
 		FROM
 			${database}.page
 			JOIN ${database}.pagetriage_page ON page_id = ptrp_page_id
 			JOIN ${database}.pagetriage_page_tags ON ptrp_page_id = ptrpt_page_id
+			JOIN ${database}.revision ON page_latest = rev_id
+			JOIN ${database}.actor ON rev_actor = actor_id
 		WHERE
 			ptrp_reviewed = 0
 			AND ptrpt_tag_id = 9
