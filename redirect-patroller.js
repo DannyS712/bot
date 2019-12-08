@@ -172,10 +172,11 @@ async function getPatrollableRedirects( redirects, logAll ) {
  * Determine if a specific redirect should be patrolled
  * @param {String} title redirect title
  * @param (String} target redirect target
+ * @param {String} user redirect creator
  * @returns {bool} if the redirect should be patrolled
  */
 function shouldPatrol( title, target, user ) {
-	if (checkAutopatrol( user ) ) return true;
+	if (checkAutopatrol( user )) return true;
 	if (target === title.replace( / \(disambiguation\)/i, '')) return true;
 	if (comparePages( target, title )) return true;
 	if (comparePages( target + 's', title ) ) return true;
