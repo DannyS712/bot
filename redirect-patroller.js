@@ -156,6 +156,7 @@ async function getPatrollableRedirects( redirects, logAll ) {
 				pageid: parseInt( redirects[iii].pageid ),
 				title: title,
 				target: target,
+				user: user,
 			} );
 			if ( logAll ) {
 				log( title + ' -> ' + target + ' created by ' + user + ' - true' );
