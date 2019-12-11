@@ -101,6 +101,30 @@ async function updateReport(content, bot) {
 	});
 }
 
+/**
+ * Get a list of users to automatically patrol
+ * @param {MWBot} bot
+ * @returns {Array} users to patrol
+ */
+async function getPatrollableUsers( bot ) {
+	log('Fetching users to patrol');
+	const result = await bot.request( {
+		action: 'query',
+		prop: 'revisions',
+		titles: 'Wikipedia:New pages patrol/Redirect whitelist',
+		rvslots: '*',
+		rvprop: 'content'
+	} );
+	console.log( result );
+	const pagecontent = result.query.pages['62534307'].revisions[0].slots.main['*'];
+	console.log( pagecontent );
+	const users = pagecontent.substring(
+		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist start -->') + 44,
+		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist end -->') - 1
+	).split('\n').map(u => u.replace(/^\* /, ''));
+	console.log( users );
+	return users;
+}
 
 /**
  * Patrol the redirects
@@ -117,7 +141,7 @@ async function patrolRedirect( pageid, bot ) {
 		reviewed: 1,
 		token: bot.editToken
 	} ).then( response => {
-	console.log( response );
+		console.log( response );
 	} ).catch(err => {
 		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
 		log(`Failed to patrol page: ${error}`);
@@ -218,13 +242,15 @@ function comparePages( target, title ) {
  */
 async function main() {
 	const results = await getRecentRedirects();
+	const bot = await getBot();
+	const usersToPatrol = await getPatrollableUsers( bot );
+	
 	//console.log( results );
 	const patrollable = await getPatrollableRedirects( results, argv.log );
 	console.log( 'patrollable', patrollable );
 	const patrollableAsString = await JSON.stringify( patrollable );
 	console.log( 'as string:', patrollableAsString );
-
-	const bot = await getBot();
+	
 	await updateReport( patrollableAsString, bot );
 
 	if (argv.dry) {
