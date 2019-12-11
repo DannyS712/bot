@@ -115,9 +115,9 @@ async function getPatrollableUsers( bot ) {
 		rvslots: '*',
 		rvprop: 'content'
 	} );
-	console.log( result );
+	//console.log( result );
 	const pagecontent = result.query.pages['62534307'].revisions[0].slots.main['*'];
-	console.log( pagecontent );
+	//console.log( pagecontent );
 	const users = pagecontent.substring(
 		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist start -->') + 44,
 		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist end -->') - 1
@@ -165,17 +165,18 @@ async function patrolRedirects( redirects, bot ) {
 /**
  * Filter redirects to only include those that can be patrolled
  * @param {Array} redirects all redirects
+ * @param {Array} usersToPatrol users to patrol automatically
  * @param {bool} logAll whether everything should be logged
  * @returns {Array} redirects that can be patrolled
  */
-async function getPatrollableRedirects( redirects, logAll ) {
+async function getPatrollableRedirects( redirects, usersToPatrol, logAll ) {
 	var patrollable = [];
 	var title, target, user;
 	for ( var iii = 0; iii < redirects.length; iii++ ) {
 		title = redirects[iii].title.toString().replace( /_/g, ' ');
 		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
 		user = redirects[iii].creator.toString();
-		if ( shouldPatrol( title, target, user ) ) {
+		if ( shouldPatrol( title, target, user, usersToPatrol ) ) {
 			patrollable.push( {
 				pageid: parseInt( redirects[iii].pageid ),
 				title: title,
@@ -197,10 +198,11 @@ async function getPatrollableRedirects( redirects, logAll ) {
  * @param {String} title redirect title
  * @param {String} target redirect target
  * @param {String} user redirect creator
+ * @param {Array} usersToPatrol users to automatically patrol
  * @returns {bool} if the redirect should be patrolled
  */
-function shouldPatrol( title, target, user ) {
-	if (checkAutopatrol( user )) return true;
+function shouldPatrol( title, target, user, usersToPatrol ) {
+	if (checkAutopatrol( user, usersToPatrol )) return true;
 	if (target === title.replace( / \(disambiguation\)/i, '')) return true;
 	if (comparePages( target, title )) return true;
 	if (comparePages( target + 's', title ) ) return true;
@@ -218,9 +220,14 @@ function shouldPatrol( title, target, user ) {
 /**
  * Determine if a redirect was created by an "autopatrolled" user
  * @param {String} user redirect creator
+ * @param {Array} usersToPatrol users to automatically patrol
  * @returns {bool} if the redirect should be patrolled based on creator
  */
-function checkAutopatrol( user ) {
+function checkAutopatrol( user, usersToPatrol ) {
+	if ( usersToPatrol.indexOf( user ) > -1 ) {
+		log( `Autopatrolling redirect created by ${user}`)
+		return true;
+	}
 	return false;
 }
 
@@ -246,7 +253,7 @@ async function main() {
 	const usersToPatrol = await getPatrollableUsers( bot );
 	
 	//console.log( results );
-	const patrollable = await getPatrollableRedirects( results, argv.log );
+	const patrollable = await getPatrollableRedirects( results, usersToPatrol, argv.log );
 	console.log( 'patrollable', patrollable );
 	const patrollableAsString = await JSON.stringify( patrollable );
 	console.log( 'as string:', patrollableAsString );
