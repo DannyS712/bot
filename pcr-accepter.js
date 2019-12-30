@@ -9,7 +9,7 @@ const util = require('util');
 const credentials = require('./PCR_credentials'); // Load credentials from config.
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
-const acceptSummary = 'Automatically accept, no net change - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot IV 65|BRFA]]';
+const acceptSummary = 'Task 65: Automatically accept, no net change';
 
 /**
  * Log a message to stdout prepended with a timestamp.
