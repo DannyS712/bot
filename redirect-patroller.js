@@ -171,17 +171,19 @@ async function patrolRedirects( redirects, bot ) {
  */
 async function getPatrollableRedirects( redirects, usersToPatrol, logAll ) {
 	var patrollable = [];
-	var title, target, user;
+	var title, target, user, reason;
 	for ( var iii = 0; iii < redirects.length; iii++ ) {
 		title = redirects[iii].title.toString().replace( /_/g, ' ');
 		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
 		user = redirects[iii].creator.toString();
-		if ( shouldPatrol( title, target, user, usersToPatrol ) ) {
+		reason = shouldPatrol( title, target, user, usersToPatrol );
+		if ( reason !== false ) {
 			patrollable.push( {
 				pageid: parseInt( redirects[iii].pageid ),
 				title: title,
 				target: target,
 				user: user,
+				reason: reason,
 			} );
 			if ( logAll ) {
 				log( title + ' -> ' + target + ' created by ' + user + ' - true' );
@@ -199,21 +201,21 @@ async function getPatrollableRedirects( redirects, usersToPatrol, logAll ) {
  * @param {String} target redirect target
  * @param {String} user redirect creator
  * @param {Array} usersToPatrol users to automatically patrol
- * @returns {bool} if the redirect should be patrolled
+ * @returns {String|false} Reason for patrolling, or false for not patrolling
  */
 function shouldPatrol( title, target, user, usersToPatrol ) {
-	if (checkAutopatrol( user, usersToPatrol )) return true;
-	if (target === title.replace( / \(disambiguation\)/i, '')) return true;
-	if (comparePages( target, title )) return true;
-	if (comparePages( target + 's', title ) ) return true;
-	if (comparePages( target + 'es', title ) ) return true;
-	if (comparePages( target.replace( /[’'‘ʻ]/g, '\'' ), title.replace( /[’'‘ʻ]/g, '\'' ) ) ) return true;
-	if (comparePages( target, title.replace( /(\w*), (\w*)/, '$2 $1' ) ) ) return true;
-	if (comparePages( target, 'List of ' + title ) ) return true;
-	if (comparePages( target.replace( /[ -]/g, '' ), title.replace( /[ -]/g, '' ) ) ) return true;
-	if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return true;
-	if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return true;
-	if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return true;
+	if (checkAutopatrol( user, usersToPatrol )) return 'Autopatrol redirect';
+	if (target === title.replace( / \(disambiguation\)/i, '')) return 'Rule A';
+	if (comparePages( target, title )) return 'Rule B';
+	if (comparePages( target + 's', title ) ) return 'Rule C';
+	if (comparePages( target + 'es', title ) ) return 'Rule C';
+	if (comparePages( target.replace( /[’'‘ʻ]/g, '\'' ), title.replace( /[’'‘ʻ]/g, '\'' ) ) ) return 'Rule D';
+	if (comparePages( target, title.replace( /(\w*), (\w*)/, '$2 $1' ) ) ) return 'Rule E';
+	if (comparePages( target, 'List of ' + title ) ) return 'Rule F';
+	if (comparePages( target.replace( /[ -]/g, '' ), title.replace( /[ -]/g, '' ) ) ) return 'Rule G';
+	if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return 'Rule H';
+	if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return 'Rule I';
+	if (comparePages( target.replace( /[-‒–—―]/g, '-'), title.replace( /[-‒–—―]/g, '-' ) ) ) return 'Rule J';
 	return false;
 }
 
