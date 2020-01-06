@@ -121,7 +121,7 @@ async function getPatrollableUsers( bot ) {
 	const users = pagecontent.substring(
 		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist start -->') + 44,
 		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist end -->') - 1
-	).split('\n').map(u => u.replace(/^\* /, ''));
+	).split('\n').map(u => u.replace(/^\* {{user2\|(.*?)}}/, '$1'));
 	console.log( users );
 	return users;
 }
