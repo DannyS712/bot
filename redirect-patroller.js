@@ -216,12 +216,14 @@ function shouldPatrol( title, target, user, usersToPatrol ) {
 	if (comparePages( target.replace( / vs?\.? /g, 'v.' ), title.replace( / vs?\.? /g, 'v.' ) ) ) return 'Rule H';
 	if (comparePages( target.replace( /^The /, '' ), title.replace( /^The /g, '' ) ) ) return 'Rule I';
 	if (comparePages( target.replace( /[-‒–—―]/g, '-' ), title.replace( /[-‒–—―]/g, '-' ) ) ) return 'Rule J';
+	/*
 	if (comparePages( target.replace( /SC/g, 'S.C.' ), title.replace( /SC/g, 'S.C.' ) ) ) return 'BRFA 63';
 	if (comparePages( target.replace( /FC/g, 'F.C.' ), title.replace( /FC/g, 'F.C.' ) ) ) return 'BRFA 63';
 	if (comparePages( target.replace( /UK/g, 'U.K.' ), title.replace( /UK/g, 'U.K.' ) ) ) return 'BRFA 63';
 	if (comparePages( target.replace( /&/g, 'and' ), title.replace( /&/g, 'and' ) ) ) return 'BRFA 63';
 	if (comparePages( target.replace( /USA/g, 'U.S.A.' ), title.replace( /USA/g, 'U.S.A.' ) ) ) return 'BRFA 63';
 	if (comparePages( target.replace( /US/g, 'U.S.' ), title.replace( /US/g, 'U.S.' ) ) ) return 'BRFA 63';
+	*/
 	return false;
 }
 
