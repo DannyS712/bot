@@ -19,7 +19,7 @@
   },
   "homepage": "https://en.wikipedia.org/wiki/User:DannyS712_bot",
   "dependencies": {
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "mwbot": "^1.0.10",
     "mysql": "mysqljs/mysql"
   }
