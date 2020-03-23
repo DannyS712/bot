@@ -38,8 +38,7 @@ async function cleanupNoticeboard(dryRun) {
 
     // Get the current content
     const queryResult = await bot.read( noticeboard );
-    log( queryResult );
-    const content = queryResult.query.pages[ pageID ].revisions[ 0 ][ '*' ];
+    const content = queryResult.query.pages[ 31934316 ].revisions[ 0 ][ '*' ];
     const newContent = content.replace( /({{DR case status\|(?:reject|resolve(?:d)?|fail(?:ed)?|close(?:d)?)}})\n<!-- \[\[User:DoNotArchiveUntil.*?-->{{User:ClueBot III\/DoNotArchiveUntil\|\d+}}<!--.*?-->/g, "$1" );
 
     // Edit the page.
