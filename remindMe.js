@@ -75,6 +75,8 @@ async function getBot(content) {
 	log(`Reminding user: ${userName}`);
 	const scheduledReminders = await getUserReminders( userName, bot );
 	console.log( scheduledReminders );
+	const forToday = getForToday( scheduledReminders );
+	console.log( forToday );
  }
 
 /**
@@ -86,7 +88,7 @@ async function getBot(content) {
  */
 async function getUserReminders( userName, bot ) {
 	return new Promise((resolve) => {
-		var remindersTitle = 'User:' + userName + '/RemindMe.json';
+		let remindersTitle = 'User:' + userName + '/RemindMe.json';
 		bot.request( {
 			action: 'query',
 			prop: 'revisions',
@@ -96,10 +98,10 @@ async function getUserReminders( userName, bot ) {
 			formatversion: 2
 	 	 } ).then( response => {
 			console.log( response );
-			var pageInfo = response.query.pages[0];
-			var currentlyScheduled = [];
+			let pageInfo = response.query.pages[0];
+			let currentlyScheduled = [];
 			if ( !pageInfo.missing ) {
-				var rawJSON = pageInfo.revisions[0].slots.main.content;
+				let rawJSON = pageInfo.revisions[0].slots.main.content;
 				currentlyScheduled = JSON.parse( rawJSON );
 			}
 			resolve( currentlyScheduled );
@@ -112,13 +114,34 @@ async function getUserReminders( userName, bot ) {
 }
 
 /**
+ * Filter for today's reminders
+ *
+ * @param {array} allReminders
+ * @return array
+ */
+function getForToday( allReminders ) {
+	let forToday = [];
+	const today = new Date().toISOString().replace(/T.*/, '');
+	for ( let jjj = 0; jjj < allReminders.length; jjj++ ) {
+		let reminder = allReminders[jjj];
+		if ( reminder && reminder[0] && reminder[0] === today && reminder[1] ) {
+			console.log(`Reminder for today: ${reminder[1]}`);
+			forToday.push( reminder );
+		} else {
+			console.log(`Not for today: ${reminder}`);
+		}
+	}
+	return forToday;
+}
+
+/**
  * Entry point for the bot task.
  * @returns {Promise<void>}
  */
 async function main() {
 	const users = await getUsers();
 	const bot = await getBot();
-	for ( var iii = 0; iii < users.length; iii++ ) {
+	for ( let iii = 0; iii < users.length; iii++ ) {
 		await remindUser(users[iii], bot, argv.dry);
 	}
 	
