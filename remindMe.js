@@ -9,7 +9,6 @@ const util = require('util');
 const credentials = require('./credentials'); // Load credentials from config.
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
-const editSummary = 'Post scheduled reminder - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]';
 
 /**
  * Log a message to stdout prepended with a timestamp.
@@ -77,6 +76,15 @@ async function getBot(content) {
 	console.log( scheduledReminders );
 	const forToday = getForToday( scheduledReminders );
 	console.log( forToday );
+	
+	for ( var reminderNum = 0; reminderNum < forToday.length; reminderNum++ ) {
+		let reminderText = forToday[reminderNum];
+		if ( dry ) {
+			console.log(`Dry mode: Would send a reminder to ${userName}: ${reminderText}`);
+		} else {
+			await sendReminder( userName, reminderText, bot );
+		}
+	}
  }
 
 /**
@@ -132,6 +140,45 @@ function getForToday( allReminders ) {
 		}
 	}
 	return forToday;
+}
+
+/**
+ * Send a reminder
+ *
+ * @param {string} userName
+ * @param {string} reminderText
+ * @param {MWBot} bot
+ */
+async function sendReminder( userName, reminderText, bot ) {
+	const today = new Date().toISOString().replace(/T.*/, '');
+	const sectionHeading = `Automatic reminder: ${today}`;
+	const talkPage = `User talk:${userName}`;
+	const editSummary = 'Post scheduled reminder - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]';
+	let messageContent = "Hello {{subst:BASEPAGENAME}}."
+		+ "\n\n"
+		+ "You have scheduled a reminder for yourself for today, shown below:"
+		+ "\n\n"
+		+ reminderText
+		+ "\n\n"
+		+ "You can now remove the reminder from your schedule at the /RemindMe.json subpage of your userpage."
+		+ "\n\n"
+		+ "The RemindMe bot system is currently in trial, see [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]. Thanks, --~~~~";
+	log(`Sending reminder to ${userName}`);
+	const editToken = await bot.getEditToken();
+	await bot.request({
+		action: 'edit',
+		title: talkPage,
+		section: 'new',
+		sectionTitle: sectionHeading,
+		text: messageContent,
+		summary: editSummary,
+		tags: [ 'bot trial' ],
+		notminor: true,
+		token: editToken
+	}).catch(err => {
+		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+		log(`Failed to send reminder: ${error}`);
+	});
 }
 
 /**
