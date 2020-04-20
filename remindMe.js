@@ -24,7 +24,7 @@ function log(message) {
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-    return [ { user: 'DannyS712_test', page_id: 59118166 } ];
+    return Promise.resolve( [ { user: 'DannyS712_test', page_id: 59118166 } ] );
 
     /**
     const connection = getReplicaConnection();
