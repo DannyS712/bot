@@ -24,7 +24,7 @@ function log(message) {
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-    return Promise.resolve( [ { user: 'DannyS712_test', page_id: 59118166 } ] );
+    return [ { user: 'DannyS712_test', page_id: 59118166 } ];
 
     /**
     const connection = getReplicaConnection();
@@ -81,10 +81,10 @@ async function updateReport(content) {
 async function main() {
     const users = await getUsers();
     const bot = await getBot();
-    users.forEach(info => {
-        await remindUser(info, bot, argv.dry);
-    });
-
+    for ( var iii = 0; iii < users.length; iii++ ) {
+        await remindUser(users[iii], bot, argv.dry);
+    }
+    
     log('Task complete!');
     process.exit();
 }
