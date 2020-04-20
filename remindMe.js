@@ -126,7 +126,7 @@ function getForToday( allReminders ) {
 		let reminder = allReminders[jjj];
 		if ( reminder && reminder[0] && reminder[0] === today && reminder[1] ) {
 			console.log(`Reminder for today: ${reminder[1]}`);
-			forToday.push( reminder );
+			forToday.push( reminder[1] );
 		} else {
 			console.log(`Not for today: ${reminder}`);
 		}
