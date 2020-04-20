@@ -70,7 +70,7 @@ async function updateReport(content) {
  * @param {MWBot} bot
  * @param {bool} dry
  */
- async function remindUser( info, bot, argv.dry ) {
+ async function remindUser( info, bot, dry ) {
     log(`Reminding user: ${info.user}`);
  }
 
