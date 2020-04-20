@@ -48,7 +48,7 @@ async function getUsers() {
  * Get the bot object
  * @returns {Promise<MWBot>}
  */
-async function updateReport(content) {
+async function getBot(content) {
     // Login to the bot.
     log(`Logging in to bot account`);
     const bot = new MWBot({apiUrl});
