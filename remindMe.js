@@ -165,6 +165,7 @@ async function sendReminder( userName, reminderText, bot ) {
 		+ "The RemindMe bot system is currently in trial, see [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]. Thanks, --~~~~";
 	log(`Sending reminder to ${userName}`);
 	const editToken = await bot.getEditToken();
+	console.log( editToken );
 	await bot.request({
 		action: 'edit',
 		title: talkPage,
