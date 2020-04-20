@@ -24,14 +24,14 @@ function log(message) {
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-    return [ { user: 'DannyS712_test', page_id: 59118166 } ];
+    return [ { user: 'DannyS712_test' } ];
 
     /**
     const connection = getReplicaConnection();
     
     log('Running query for users opted in');
     const sql = `
-        SELECT page_title AS user, page_id
+        SELECT page_title AS user
         FROM ${database}.page
         JOIN ${database}.categorylinks
         ON page.page_id = categorylinks.cl_from
@@ -71,8 +71,45 @@ async function getBot(content) {
  * @param {bool} dry
  */
  async function remindUser( info, bot, dry ) {
-    log(`Reminding user: ${info.user}`);
+     const userName = info.user;
+     log(`Reminding user: ${userName}`);
+     const scheduledReminders = await getUserReminders( userName, bot );
+     console.log( scheduledReminders );
  }
+
+/**
+ * Get the JSON representing a user's scheduled reminders
+ * Cannot query database, text isn't available there; use the api
+ * @param {string} userName
+ * @param {MWBot} bot
+ * @return {Promise<array>}
+ */
+async function getUserReminders( userName, bot ) {
+    return new Promise((resolve) => {
+        var remindersTitle = 'User:' + userName + '/RemindMe.json';
+		bot.request( {
+			action: 'query',
+            prop: 'revisions',
+            titles: remindersTitle,
+            rvslots: 'main',
+            rvprop: 'content',
+            formatversion: 2
+	 	 } ).then( response => {
+			console.log( response );
+            var pageInfo = response.query.pages[0];
+			var currentlyScheduled = [];
+            if ( !pageInfo.missing ) {
+			    var rawJSON = pageInfo.revisions[0].slots.main.content;
+				currentlyScheduled = JSON.parse( rawJSON );
+			}
+            resolve( currentlyScheduled );
+		  } ).catch(err => {
+			const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
+			log(`Api failure: ${error}`);
+			resolve( [] )
+		});
+	});
+}
 
 /**
  * Entry point for the bot task.
