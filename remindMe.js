@@ -16,32 +16,32 @@ const editSummary = 'Post scheduled reminder - BOT in trial - [[Wikipedia:Bots/R
  * @param {String} message
  */
 function log(message) {
-    const datestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    console.log(`${datestamp}: ${message}`);
+	const datestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	console.log(`${datestamp}: ${message}`);
 }
 /**
  * Query the replicas to get the users opted in
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-    return [ { user: 'DannyS712_test' } ];
+	return [ { user: 'DannyS712_test' } ];
 
-    /**
-    const connection = getReplicaConnection();
-    
-    log('Running query for users opted in');
-    const sql = `
-        SELECT page_title AS user
-        FROM ${database}.page
-        JOIN ${database}.categorylinks
-        ON page.page_id = categorylinks.cl_from
-        WHERE cl_to = 'Users_using_remindMe'
-        AND page_namespace = 2`;
+	/**
+	const connection = getReplicaConnection();
 
-    // Make database query synchronous.
-    const fn = util.promisify(connection.query).bind(connection);
-    return await fn(sql);
-    */
+	log('Running query for users opted in');
+	const sql = `
+		SELECT page_title AS user
+		FROM ${database}.page
+		JOIN ${database}.categorylinks
+		ON page.page_id = categorylinks.cl_from
+		WHERE cl_to = 'Users_using_remindMe'
+		AND page_namespace = 2`;
+
+	// Make database query synchronous.
+	const fn = util.promisify(connection.query).bind(connection);
+	return await fn(sql);
+	*/
 }
 
 /**
@@ -49,16 +49,16 @@ async function getUsers() {
  * @returns {Promise<MWBot>}
  */
 async function getBot(content) {
-    // Login to the bot.
-    log(`Logging in to bot account`);
-    const bot = new MWBot({apiUrl});
-    await bot.loginGetEditToken({
-        apiUrl,
-        username: credentials.username,
-        password: credentials.password
-    });
+	// Login to the bot.
+	log(`Logging in to bot account`);
+	const bot = new MWBot({apiUrl});
+	await bot.loginGetEditToken({
+		apiUrl,
+		username: credentials.username,
+		password: credentials.password
+	});
 
-    return bot;
+	return bot;
 }
 
 /**
@@ -71,10 +71,10 @@ async function getBot(content) {
  * @param {bool} dry
  */
  async function remindUser( info, bot, dry ) {
-     const userName = info.user;
-     log(`Reminding user: ${userName}`);
-     const scheduledReminders = await getUserReminders( userName, bot );
-     console.log( scheduledReminders );
+	const userName = info.user;
+	log(`Reminding user: ${userName}`);
+	const scheduledReminders = await getUserReminders( userName, bot );
+	console.log( scheduledReminders );
  }
 
 /**
@@ -85,25 +85,25 @@ async function getBot(content) {
  * @return {Promise<array>}
  */
 async function getUserReminders( userName, bot ) {
-    return new Promise((resolve) => {
-        var remindersTitle = 'User:' + userName + '/RemindMe.json';
+	return new Promise((resolve) => {
+		var remindersTitle = 'User:' + userName + '/RemindMe.json';
 		bot.request( {
 			action: 'query',
-            prop: 'revisions',
-            titles: remindersTitle,
-            rvslots: 'main',
-            rvprop: 'content',
-            formatversion: 2
+			prop: 'revisions',
+			titles: remindersTitle,
+			rvslots: 'main',
+			rvprop: 'content',
+			formatversion: 2
 	 	 } ).then( response => {
 			console.log( response );
-            var pageInfo = response.query.pages[0];
+			var pageInfo = response.query.pages[0];
 			var currentlyScheduled = [];
-            if ( !pageInfo.missing ) {
-			    var rawJSON = pageInfo.revisions[0].slots.main.content;
+			if ( !pageInfo.missing ) {
+				var rawJSON = pageInfo.revisions[0].slots.main.content;
 				currentlyScheduled = JSON.parse( rawJSON );
 			}
-            resolve( currentlyScheduled );
-		  } ).catch(err => {
+			resolve( currentlyScheduled );
+		} ).catch(err => {
 			const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
 			log(`Api failure: ${error}`);
 			resolve( [] )
@@ -116,14 +116,14 @@ async function getUserReminders( userName, bot ) {
  * @returns {Promise<void>}
  */
 async function main() {
-    const users = await getUsers();
-    const bot = await getBot();
-    for ( var iii = 0; iii < users.length; iii++ ) {
-        await remindUser(users[iii], bot, argv.dry);
-    }
-    
-    log('Task complete!');
-    process.exit();
+	const users = await getUsers();
+	const bot = await getBot();
+	for ( var iii = 0; iii < users.length; iii++ ) {
+		await remindUser(users[iii], bot, argv.dry);
+	}
+	
+	log('Task complete!');
+	process.exit();
 }
 
 main().catch(console.error);
