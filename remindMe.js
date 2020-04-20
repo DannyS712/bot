@@ -176,6 +176,7 @@ async function sendReminder( userName, reminderText, bot ) {
 		notminor: true,
 		token: editToken
 	}).catch(err => {
+		console.log( err );
 		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
 		log(`Failed to send reminder: ${error}`);
 	});
