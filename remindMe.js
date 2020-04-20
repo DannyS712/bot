@@ -164,8 +164,7 @@ async function sendReminder( userName, reminderText, bot ) {
 		+ "\n\n"
 		+ "The RemindMe bot system is currently in trial, see [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]. Thanks, --~~~~";
 	log(`Sending reminder to ${userName}`);
-	const editToken = await bot.getEditToken();
-	console.log( editToken );
+	const tokens = await bot.getEditToken();
 	await bot.request({
 		action: 'edit',
 		title: talkPage,
@@ -175,7 +174,7 @@ async function sendReminder( userName, reminderText, bot ) {
 		summary: editSummary,
 		tags: [ 'bot trial' ],
 		notminor: true,
-		token: editToken
+		token: tokens.csrftoken
 	}).catch(err => {
 		console.log( err );
 		const error = err.response && err.response.error ? err.response.error.code : 'Unknown';
