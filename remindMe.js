@@ -23,7 +23,15 @@ function log(message) {
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-	const connection = getReplicaConnection();
+	log('Establishing connection to the replicas (RemindMe)');
+	const connection = mysql.createConnection({
+		host: credentials.db_host,
+		port: credentials.db_port,
+		user: credentials.db_user,
+		password: credentials.db_password,
+		database: credentials.db_database
+	});
+	connection.connect();
 
 	log('Running query for users opted in');
 	const sql = `
