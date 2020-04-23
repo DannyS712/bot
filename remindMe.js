@@ -23,24 +23,21 @@ function log(message) {
  * @returns {Array} Result of query.
  */
 async function getUsers() {
-	return [ { user: 'DannyS712_test' } ];
-
-	/**
 	const connection = getReplicaConnection();
 
 	log('Running query for users opted in');
 	const sql = `
 		SELECT page_title AS user
 		FROM ${database}.page
-		JOIN ${database}.categorylinks
-		ON page.page_id = categorylinks.cl_from
-		WHERE cl_to = 'Users_using_remindMe'
-		AND page_namespace = 2`;
+		JOIN ${database}.templatelinks
+		ON page.page_id = templatelinks.tl_from
+		WHERE tl_namespace = 10
+		AND tl_title = 'PleaseRemindMe'
+		AND tl_from_namespace = 2`;
 
 	// Make database query synchronous.
 	const fn = util.promisify(connection.query).bind(connection);
 	return await fn(sql);
-	*/
 }
 
 /**
