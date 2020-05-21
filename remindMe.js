@@ -41,7 +41,7 @@ async function getUsers() {
 		ON page.page_id = templatelinks.tl_from
 		WHERE tl_namespace = 10
 		AND tl_title = 'PleaseRemindMe'
-		AND tl_from_namespace = 2`;
+		AND tl_from_namespace IN (2, 3)`;
 
 	// Make database query synchronous.
 	const fn = util.promisify(connection.query).bind(connection);
