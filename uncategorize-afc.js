@@ -69,7 +69,7 @@ async function uncategorizePage( bot, row, dryRun ) {
   const title = nsTitlePrefix + row.title;
 
   const pageID = parseInt( row.ID );
-  const queryResult = await bot.read( title );
+  const queryResult = await bot.read( title, true ); // true = don't follow redirects
   const content = queryResult.query.pages[ pageID ].revisions[ 0 ][ '*' ];
   const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
   if ( dryRun ) {
