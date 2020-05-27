@@ -158,7 +158,7 @@ async function sendReminder( userName, reminderText, bot ) {
 	const today = new Date().toISOString().replace(/T.*/, '');
 	const sectionHeading = `Automatic reminder: ${today}`;
 	const talkPage = `User talk:${userName}`;
-	const editSummary = 'Post scheduled reminder - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]';
+	const editSummary = 'Task 68: Post scheduled reminder';
 	let messageContent = "Hello {{subst:BASEPAGENAME}}."
 		+ "\n\n"
 		+ "You have scheduled a reminder for yourself for today, shown below:"
@@ -167,7 +167,7 @@ async function sendReminder( userName, reminderText, bot ) {
 		+ "\n----\n"
 		+ "You can now remove the reminder from your schedule at the /RemindMe.json subpage of your userpage."
 		+ "\n\n"
-		+ "The RemindMe bot system is currently in trial, see [[Wikipedia:Bots/Requests for approval/DannyS712 bot 68]]. Thanks, --~~~~";
+		+ "Thanks, --~~~~";
 	log(`Sending reminder to ${userName}`);
 	const tokens = await bot.getEditToken();
 	await bot.request({
