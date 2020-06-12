@@ -71,7 +71,14 @@ async function uncategorizePage( bot, row, dryRun ) {
   const pageID = parseInt( row.ID );
   const queryResult = await bot.read( title, true ); // true = don't follow redirects
   const content = queryResult.query.pages[ pageID ].revisions[ 0 ][ '*' ];
-  const newContent = content.replace( /\[\[Category/gi, '\[\[:Category' );
+  
+  // Ensure that draft categories, and categories in {{Draft categories}}, don't match
+  const ignoredCategories = content.match(/{{Draft categories\|[^{}]+}}/i);
+  const toPutBack = ( ignoredCategories && ignoredCategories[0] ) || '';
+  var newContent = content.replace(/{{Draft categories\|[^{}]+}}/i, 'PUTTHEIGNOREDCATEGORIESBACKHERE');
+  newContent = newContent.replace( /\[\[Category:(?!Draft)/gi, '\[\[:Category' );
+  newContent = newContent.replace( 'PUTTHEIGNOREDCATEGORIESBACKHERE', toPutBack );
+
   if ( dryRun ) {
     console.log( title, content, newContent );
     return;
