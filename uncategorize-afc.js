@@ -76,7 +76,7 @@ async function uncategorizePage( bot, row, dryRun ) {
   const ignoredCategories = content.match(/{{Draft categories\|[^{}]+}}/i);
   const toPutBack = ( ignoredCategories && ignoredCategories[0] ) || '';
   var newContent = content.replace(/{{Draft categories\|[^{}]+}}/i, 'PUTTHEIGNOREDCATEGORIESBACKHERE');
-  newContent = newContent.replace( /\[\[Category:(?!Draft)/gi, '\[\[:Category' );
+  newContent = newContent.replace( /\[\[Category:(?!(?:Draft|.*?drafts\]\]))/gi, '\[\[:Category' );
   newContent = newContent.replace( 'PUTTHEIGNOREDCATEGORIESBACKHERE', toPutBack );
 
   if ( dryRun ) {
