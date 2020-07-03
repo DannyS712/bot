@@ -37,8 +37,13 @@ async function cleanupNoticeboard(dryRun) {
     });
 
     // Get the current content
-    const queryResult = await bot.read( noticeboard );
-    const content = queryResult.query.pages[ 31934316 ].revisions[ 0 ][ '*' ];
+    const queryResult = await bot.readWithProps(
+        noticeboard,
+        'content|ids'
+    );
+    const revision = queryResult.query.pages[ 31934316 ].revisions[ 0 ];
+    const content = revision[ '*' ];
+    const baseRevId = revision[ 'revid' ];
     const newContent = content.replace( /({{DR case status\|(?:reject|resolve(?:d)?|fail(?:ed)?|close(?:d)?)}})\n<!-- \[\[User:DoNotArchiveUntil.*?-->{{User:ClueBot III\/DoNotArchiveUntil\|\d+}}<!--.*?-->/g, "$1" );
 
     // Edit the page.
@@ -46,7 +51,7 @@ async function cleanupNoticeboard(dryRun) {
         log( content, newContent );
         return;
     } else {
-        return await bot.update( noticeboard, newContent, editSummary, { minor: true } );
+        return await bot.update( noticeboard, newContent, editSummary, { minor: true, baserevid: baseRevId } );
     }
 }
 
