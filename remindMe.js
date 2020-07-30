@@ -177,7 +177,6 @@ async function sendReminder( userName, reminderText, bot ) {
 		sectiontitle: sectionHeading,
 		text: messageContent,
 		summary: editSummary,
-		tags: 'bot trial',
 		notminor: true,
 		token: tokens.csrftoken
 	}).then(response => {
