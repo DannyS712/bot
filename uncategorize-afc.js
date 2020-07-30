@@ -49,7 +49,8 @@ async function getCategorizedDrafts() {
        SELECT page.page_id AS ID, page.page_namespace AS ns, page.page_title AS title FROM categorylinks
        JOIN page ON page_id = cl_from
        WHERE cl_to = 'AfC_submissions_with_categories'
-       AND page_namespace in (2, 118)`;
+       AND page_namespace in (2, 118)
+       AND page_is_redirect = 0`;
 
     // Make database query synchronous.
     const fn = util.promisify(connection.query).bind(connection);
