@@ -39,7 +39,7 @@ async function cleanupNoticeboard(dryRun) {
     // Get the current content
     const queryResult = await bot.request( {
         action: 'query',
-        propr: 'revisions',
+        prop: 'revisions',
         rvprop: 'content|ids',
         titles: noticeboard
     } );
