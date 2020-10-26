@@ -37,10 +37,12 @@ async function cleanupNoticeboard(dryRun) {
     });
 
     // Get the current content
-    const queryResult = await bot.readWithProps(
-        noticeboard,
-        'content|ids'
-    );
+    const queryResult = await bot.request( {
+        action: 'query',
+        propr: 'revisions',
+        rvprop: 'content|ids',
+        titles: noticeboard
+    } );
     const revision = queryResult.query.pages[ 31934316 ].revisions[ 0 ];
     const content = revision[ '*' ];
     const baseRevId = revision[ 'revid' ];
