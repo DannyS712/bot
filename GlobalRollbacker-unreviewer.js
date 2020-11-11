@@ -143,7 +143,6 @@ async function unreviewPage( pageid, bot ) {
  * @returns {bool} true
  */
 async function unreviewPages( pages, bot ) {
-	console.log( pages );
 	for (var lll = 0; lll < pages.length; lll++) {
 		await unreviewPage( pages[lll].pageid, bot );
 	}
