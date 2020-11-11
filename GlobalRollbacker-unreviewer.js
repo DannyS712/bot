@@ -122,13 +122,12 @@ async function updateReport(content, bot) {
  * @returns {Promise<void>}
  */
 async function unreviewPage( pageid, bot ) {
-	// TODO uncomment the token once ready, comment out to make sure nothing goes wrong
 	log(`Unreviewing ${pageid}`);
 	await bot.request( {
 		action: 'pagetriageaction',
 		pageid: pageid,
 		reviewed: 0,
-		token: '' // bot.editToken
+		token: bot.editToken
 	} ).then( response => {
 		console.log( response );
 	} ).catch(err => {
