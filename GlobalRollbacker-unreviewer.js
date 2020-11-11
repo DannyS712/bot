@@ -68,7 +68,7 @@ async function getPagesToUnreview() {
 			JOIN ${database}.pagetriage_page ON ptrp_last_reviewed_by = actor_user
 			JOIN ${database}.page ON page_id = ptrp_page_id
 		WHERE
-			gug_group = ${globalGroupName}
+			gug_group = '${globalGroupName}'
 			AND ptrp_reviewed = ${autopatrolStatus}
 			AND page_namespace = 0
 			AND NOT EXISTS (
