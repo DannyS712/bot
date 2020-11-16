@@ -10,7 +10,7 @@ const credentials = require('./redirect_credentials'); // Load credentials from 
 const apiUrl = 'https://en.wikipedia.org/w/api.php';
 const database = 'enwiki_p';
 const reportPage = 'User:DannyS712 bot III/Unreviewed.json';
-const editSummary = 'Logging pages unreviewed (bot) - BOT in trial - [[Wikipedia:Bots/Requests for approval/DannyS712 bot III 72]]';
+const editSummary = 'Logging pages unreviewed (bot)';
 
 /**
  * Log a message to stdout prepended with a timestamp.
