@@ -174,7 +174,7 @@ async function getPatrollableRedirects( redirects, usersToPatrol, logAll ) {
 	var title, target, user, reason;
 	for ( var iii = 0; iii < redirects.length; iii++ ) {
 		title = redirects[iii].title.toString().replace( /_/g, ' ');
-		target = redirects[iii].target.toString().replace( /REDIRECT /i, '' );
+		target = redirects[iii].target.toString().replace( /REDIRECT\s*/i, '' );
 		user = redirects[iii].creator.toString();
 		reason = shouldPatrol( title, target, user, usersToPatrol );
 		if ( reason !== false ) {
