@@ -46,7 +46,7 @@ async function cleanupNoticeboard(dryRun) {
     const revision = queryResult.query.pages[ 31934316 ].revisions[ 0 ];
     const content = revision[ '*' ];
     const baseRevId = revision[ 'revid' ];
-    const newContent = content.replace( /({{DR case status\|(?:reject|resolve(?:d)?|fail(?:ed)?|close(?:d)?)}})\n<!-- \[\[User:DoNotArchiveUntil.*?-->{{User:ClueBot III\/DoNotArchiveUntil\|\d+}}<!--.*?-->/g, "$1" );
+    const newContent = content.replace( /({{DR case status\|(?:reject|resolve(?:d)?|fail(?:ed)?|close(?:d)?)}})\n<!-- \[\[User:DoNotArchiveUntil.*?-->{{User:ClueBot III\/DoNotArchiveUntil\|\d+}}<!--.*?-->/gi, "$1" );
 
     // Edit the page.
     if ( dryRun ) {
