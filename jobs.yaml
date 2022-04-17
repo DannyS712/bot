@@ -2,49 +2,49 @@
 - name: polluted-categories-2
   command: ~/bot/polluted-categories-2.js
   image: tf-node12
-  mem: 1000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 0 */2 * *"
 
 - name: polluted-categories-3
   command: ~/bot/polluted-categories-3.js
   image: tf-node12
-  mem: 1500m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 1 */2 * *"
 
 - name: polluted-categories-4
   command: ~/bot/polluted-categories-4.js
   image: tf-node12
-  mem: 1500m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 2 */4 * *"
 
 - name: orphans-with-links
   command: ~/bot/orphans-with-links.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 3 */4 * *"
 
 - name: stub-name
   command: ~/bot/stub-name.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 4 * * *"
 
 - name: uncategorize-afc
   command: ~/bot/uncategorize-afc.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 */6 * * *"
 
 - name: redirect-patroller
   command: ~/bot/redirect-patroller.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "*/15 * * * *"
 
@@ -52,33 +52,33 @@
 - name: globalrollbacker-unreviewer
   command: ~/bot/GlobalRollbacker-unreviewer.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
 
 - name: pcr-accepter
   command: ~/bot/pcr-accepter.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "*/15 * * * *"
 
 - name: drn-cleaner
   command: ~/bot/drn-cleaner.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "*/15 * * * *"
 
 - name: remindme
   command: ~/bot/remindMe.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 12 * * *"
 
 - name: enwikivoyage-graffiti-wall
   command: ~/bot/enwikivoyage-graffiti-wall-reset.js
   image: tf-node12
-  mem: 3000m
+  mem: 1Gi
   emails: onfailure
   schedule: "0 * * * *"
