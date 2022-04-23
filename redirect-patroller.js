@@ -111,7 +111,7 @@ async function getPatrollableUsers( bot ) {
 	const result = await bot.request( {
 		action: 'query',
 		prop: 'revisions',
-		titles: 'Wikipedia:New pages patrol/Redirect whitelist',
+		titles: 'Wikipedia:New pages patrol/Redirect autopatrol list',
 		rvslots: '*',
 		rvprop: 'content'
 	} );
