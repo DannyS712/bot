@@ -119,8 +119,8 @@ async function getPatrollableUsers( bot ) {
 	const pagecontent = result.query.pages['62534307'].revisions[0].slots.main['*'];
 	//console.log( pagecontent );
 	const users = pagecontent.substring(
-		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist start -->') + 44,
-		pagecontent.indexOf('<!-- DannyS712 bot III: whitelist end -->') - 1
+		pagecontent.indexOf('<!-- DannyS712 bot III: autopatrol list start -->') + 44,
+		pagecontent.indexOf('<!-- DannyS712 bot III: autopatrol list end -->') - 1
 	).split('\n').map(u => u.replace(/^\* {{user2\|(.*?)}}/, '$1'));
 	console.log( users );
 	return users;
