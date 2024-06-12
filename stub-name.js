@@ -71,7 +71,7 @@ async function fixStubTemplate( bot, row, dryRun ) {
   const content = queryResult.query.pages[ pageID ].revisions[ 0 ][ '*' ];
   // replace until whitespace OR the } at the end of the template if
   // all on one line
-  const newContent = content.replace( /(\|\s*name\s*=\s*)\S*?($|\s|})/i, "$1 {{subst:FULLPAGENAME}}$2" );
+  const newContent = content.replace( /(\|\s*name\s*=\s*)\S*?($|\s|})/i, "$1{{subst:FULLPAGENAME}}$2" );
   if ( dryRun ) {
     console.log( title, content, newContent );
     return;
