@@ -51,8 +51,9 @@ async function getLinkedOrpahns() {
         FROM ${database}.page p
         INNER JOIN ${database}.categorylinks c ON p.page_id = c.cl_from
           AND c.cl_to = 'All_orphaned_articles'
-        INNER JOIN ${database}.pagelinks link ON p.page_title = link.pl_title
-          AND p.page_namespace = link.pl_namespace
+        INNER JOIN ${database}.linktarget lt ON p.page_title = lt.lt_title
+          AND p.page_namespace = lt.lt_namespace
+        INNER JOIN ${database}.pagelinks link ON link.pl_target_id = lt.lt_id
         INNER JOIN ${database}.page p2 ON p2.page_id = link.pl_from
         WHERE
           link.pl_from_namespace = 0
