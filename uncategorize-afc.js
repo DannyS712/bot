@@ -75,11 +75,21 @@ async function uncategorizePage( bot, row, dryRun ) {
   
   // Ensure that draft categories, and categories in {{Draft categories}}, don't match
   // Supported redirects: {{Draftcat}}, {{Draft cats}}, and {{Draft Categories}}
-  const ignoredCategories = content.match(/{{Draft(?: categories| cats|cat)\|[^{}]+}}/i);
-  const toPutBack = ( ignoredCategories && ignoredCategories[0] ) || '';
-  var newContent = content.replace(/{{Draft(?: categories| cats|cat)\|[^{}]+}}/i, 'PUTTHEIGNOREDCATEGORIESBACKHERE');
-  newContent = newContent.replace( /\[\[Category:(?!(?:Draft|.*?drafts\]\]))/gi, '\[\[:Category:' );
-  newContent = newContent.replace( 'PUTTHEIGNOREDCATEGORIESBACKHERE', toPutBack );
+  var newContent = content;
+  let toPutBackAll = [];
+  while ( true ) {
+    const ignoredCategories = newContent.match(/{{Draft(?: categories| cats|cat)\|[^{}]+}}/i);
+    const toPutBack = ( ignoredCategories && ignoredCategories[0] ) || '';
+    if (toPutBack === '') {
+      break;
+    }
+    toPutBackAll.push( toPutBack );
+    newContent = newContent.replace(/{{Draft(?: categories| cats|cat)\|[^{}]+}}/i, 'PUTTHEIGNOREDCATEGORIESBACKHERE');
+  }
+  newContent = newContent.replace( /((\[\[Category:(?!(?:Draft|.*?drafts\]\]))[^\]]+\]\])\n?)+/gi, '{{Draft categories|\n$1}}\n' );
+  while ( toPutBackAll.length !== 0 ) {
+    newContent = newContent.replace( 'PUTTHEIGNOREDCATEGORIESBACKHERE', toPutBackAll.shift() );
+  }
 
   if ( dryRun ) {
     console.log( title, content, newContent );
