@@ -118,10 +118,19 @@ async function getPatrollableUsers( bot ) {
 	//console.log( result );
 	const pagecontent = result.query.pages['62534307'].revisions[0].slots.main['*'];
 	//console.log( pagecontent );
-	const users = pagecontent.substring(
-		pagecontent.indexOf('<!-- DannyS712 bot III: (whitelist|autopatrol list) start -->') + 44,
-		pagecontent.indexOf('<!-- DannyS712 bot III: (whitelist|autopatrol list) end -->') - 1
-	).split('\n').map(u => u.replace(/^\* {{user2\|(.*?)}}/, '$1'));
+	let listContent = '';
+	if ( pagecontent.indexOf('<!-- DannyS712 bot III: autopatrol list start -->') !== -1 ) {
+		listContent = pagecontent.substring(
+			pagecontent.indexOf('<!-- DannyS712 bot III: autopatrol list start -->') + 50,
+			pagecontent.indexOf('<!-- DannyS712 bot III: autopatrol list end -->') - 1
+		);
+	} else {
+		listContent = pagecontent.substring(
+			pagecontent.indexOf('<!-- DannyS712 bot III: whitelist start -->') + 44,
+			pagecontent.indexOf('<!-- DannyS712 bot III: whitelist end -->') - 1
+		)
+	}
+	const users = listContent.split('\n').map(u => u.replace(/^\* {{user2\|(.*?)}}/, '$1'));
 	console.log( users );
 	return users;
 }
