@@ -86,7 +86,7 @@ async function uncategorizePage( bot, row, dryRun ) {
     toPutBackAll.push( toPutBack );
     newContent = newContent.replace(/{{Draft(?: categories| cats|cat)\|[^{}]+}}/i, 'PUTTHEIGNOREDCATEGORIESBACKHERE');
   }
-  newContent = newContent.replace( /((\[\[Category:(?!(?:Draft|.*?drafts\]\]))[^\]]+\]\])\n?)+/gi, '{{Draft categories|\n$1}}\n' );
+  newContent = newContent.replace( /(((\[\[Category:(?!(?:Draft|.*?drafts\]\]))[^\]]+\]\])\n?)+)/gi, '{{Draft categories|\n$1}}\n' );
   while ( toPutBackAll.length !== 0 ) {
     newContent = newContent.replace( 'PUTTHEIGNOREDCATEGORIESBACKHERE', toPutBackAll.shift() );
   }
